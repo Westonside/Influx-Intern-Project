@@ -15,10 +15,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pandas as pd
 from django.contrib.auth.decorators import login_required
 
-
-
-
-
+globalAlerts = []
 
 def index(request):
     if request.user.is_authenticated:
@@ -95,16 +92,16 @@ def follow_user(request):
         
     # return JsonResponse({"success": True})
     
-    
+@csrf_exempt
 def create_alerts(request):
-    print("andrew here")
-    if request.method == "POST":
-        print("andrews code")
-        
-        # data = json.loads(request.body)
-        # print(data["stocks"])
-        # stocks = data["stocks"]
-        # splitUp = stocks.split(',')
+    if request.method == "GET":
+        return HttpResponse(json.dumps(globalAlerts), status=200)
+    elif request.method == "POST":
+        action = request.POST["action"]
+        sym = request.POST["symbol"]
+        print(f"alert received, {action} {sym}")
+        globalAlerts.append((action, sym))
+        return HttpResponse(status=200)
     else:
         return HttpResponse(status=405)
     
