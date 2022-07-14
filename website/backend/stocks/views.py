@@ -96,7 +96,8 @@ def follow_user(request):
     # return JsonResponse({"success": True})
     
     
-    
+def create_alerts(request):
+    print("andrew here")
     
 def getStocks():
     bucket = "stocks_sample"

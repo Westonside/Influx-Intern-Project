@@ -7,4 +7,5 @@ urlpatterns = [
     path("logged_in/",views.is_logged_in, name="isLoggedIn"),
     path("login/",views.login, name="Login"),
     path("logout_user/", views.logout_user,name="Logout" ),
+    path("alert/", views.create_alerts, name="Alert"),
 ]
