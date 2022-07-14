@@ -4,6 +4,9 @@ import { Paper } from "@mui/material";
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { Box } from "@mui/system";
 import { Stack } from "@mui/material";
+import WatchList from "./WatchList";
+import BuyList from "./BuyList";
+import TopStocks from "./TopStocks";
 const HomeBody = () =>{
     const Item = styled(Paper)(({ theme }) => ({
         ...theme.typography.body2,
@@ -14,24 +17,21 @@ const HomeBody = () =>{
         
       }));
 
-//       <Stack direction="row" spacing={2}>
-//       <Item>Item 1</Item>
-//       <Item>Item 2</Item>
-//       <Item>Item 3</Item>
-//   </Stack>
     const startValues = [1,2,3]
    return(
     <Box sx={{ flexGrow: 2, marginTop:5, paddingLeft:5,paddingRight:5 }}>
         <Grid container spacing={2}>
             <Grid item xs={12}>
-                <Item elevation={3}>testing</Item>
+                <TopStocks />
             </Grid>
             <Grid item container spacing={4} sx={{marginTop:5}}>
                 <Grid item xs={7}>
-                    <Item>My Watchlist</Item>
+                    <Item>
+                        <WatchList />
+                    </Item>
                 </Grid>
                 <Grid item xs={4}>
-                    <Item>My Buys</Item>
+                    <BuyList />
                 </Grid>
             </Grid>
             

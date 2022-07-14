@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useSyncExternalStore } from "react";
 import { useState } from "react";
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
@@ -17,21 +17,91 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { TextField } from "@mui/material";
-import styles from '../componentStyles/HeaderStyles'
+import styles from '../componentStyles/HeaderStyles';
+import { Popper } from "@mui/material";
+import { Paper } from "@mui/material";
+import { Grow } from "@mui/material";
+import { ClickAwayListener } from "@mui/material";
+import { MenuList } from "@mui/material";
+import axios from "axios";
 const Header = ({
     setSearched,
-    page
+    page,
+    
 }) =>{
+    const [logged, setlogged] = useState(false)
     const classes = styles()
     const [searchingTerms, setsearchingTerms] = useState("")
+    const [open, setOpen] = useState(false);
+    const anchorRef = React.useRef(null);
+
+    const signOut = () =>{
+      axios.get("/api/logout_user/")
+      window.location.reload()
+    }
+
+    const checkLogged = () =>{
+      axios.get("/api/logged_in/")
+      .then(res =>{
+
+          console.log(res.data)
+          
+          // alert(res.data.redirect)
+          // alert(res.data.success)
+          if (res.data.success){
+            setlogged(true)
+          } 
+          // alert(window.location.href, window.location.href === "http://localhost:3000/register")
+
+          console.log(res.data, res.data.success, window.location.href)
+
+          //super fast shit fix for hackathon purposes never do this haha
+          if (res.data.success === false && !(window.location.href === "http://localhost:3000/register")){
+              console.log("got here ")
+              window.location.replace("/register")
+          }
+
+      })
+  }
+
+  // React.useEffect(()=>{
+  //   checkLogged()
+  // },[]);
+  
+  checkLogged()
+
+    const whichDrop = () =>{
+      if (logged) {
+        return(
+          <MenuItem onClick={signOut}>Sign Out</MenuItem>
+
+        )
+      }
+      return(
+        <MenuItem onClick={null}>Sign In</MenuItem>
+      )
+    }
     
+    const handleToggle = () => {
+      console.log('open?')
+     setOpen((prevOpen) => !prevOpen);
+    };
+
 
       const onChangeSearch = (e) =>{
         setSearched(e.target.value)
         setsearchingTerms(e.target.value)
       }
 
-      
+      const handleClose = (event) => {
+        setOpen(false)
+        if (anchorRef.current && anchorRef.current.contains(event.target)) {
+          return;
+        }
+      }
+   
+
+   
     return(
         <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -78,16 +148,58 @@ const Header = ({
               </Badge>
             </IconButton>
             <IconButton
+            onClick={handleToggle}
               size="large"
               edge="end"
               aria-label="account of current user"
             //   aria-controls={menuId}
-              aria-haspopup="true"
-            //   onClick={handleProfileMenuOpen}
+
+              
               color="inherit"
             >
-              <AccountCircle />
+              <AccountCircle 
+              aria-haspopup="true"
+              
+              ref={anchorRef}
+              aria-expanded={open}
+              aria-controls={open ? 'soething' : undefined} />
+              
             </IconButton>
+
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+            >
+         {({ TransitionProps, placement }) => (
+           <Grow
+             {...TransitionProps}
+             style={{
+               transformOrigin:
+                 placement === 'bottom-start' ? 'left top' : 'left bottom',
+             }}
+           >
+             <Paper>
+               <ClickAwayListener onClickAway={handleClose}>
+                 <MenuList
+                   autoFocusItem={open}
+                   id="composition-menu"
+                   aria-labelledby="composition-button"
+                 >
+                  
+                  {whichDrop()}
+
+                   <MenuItem onClick={handleClose}>Close</MenuItem>
+                 </MenuList>
+               </ClickAwayListener>
+             </Paper>
+           </Grow>
+         )}
+       </Popper>
+           
           </Box>
           <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
             <IconButton
@@ -100,6 +212,10 @@ const Header = ({
             >
               <MoreIcon />
             </IconButton>
+
+
+            
+
           </Box>
         </Toolbar>
       </AppBar>

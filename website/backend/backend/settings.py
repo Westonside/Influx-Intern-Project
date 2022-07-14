@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
     'stocks',
+    # 'channels',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,19 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 
 ]
+
+# ASGI_APPLICATION = 'backend.asgi.application'
+
+# CHANNEL_LAYERS = {
+#     "default": {
+#         "BACKEND": "channels_redis.core.RedisChannelLayer",
+#         "CONFIG": {
+#             "hosts": [("127.0.0.1", 6379)],
+#         },
+#     },
+# }
+
+AUTH_USER_MODEL = 'stocks.User'
 
 ROOT_URLCONF = 'backend.urls'
 
