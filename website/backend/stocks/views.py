@@ -98,6 +98,15 @@ def follow_user(request):
     
 def create_alerts(request):
     print("andrew here")
+    if request.method == "POST":
+        print("andrews code")
+        
+        # data = json.loads(request.body)
+        # print(data["stocks"])
+        # stocks = data["stocks"]
+        # splitUp = stocks.split(',')
+    else:
+        return HttpResponse(status=405)
     
 def getStocks():
     bucket = "stocks_sample"
